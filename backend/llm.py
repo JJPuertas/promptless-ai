@@ -94,6 +94,7 @@ Respond with a JSON object containing action IDs in ranked order, most useful fi
     response = client.generate(
         model=model,
         prompt=prompt,
+        think=False,
         format="json",
         options={"temperature": 0.1, "num_predict": 200},
     )
