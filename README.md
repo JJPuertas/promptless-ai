@@ -118,15 +118,15 @@ Optional local action reranking uses Ollama in the background. The `/intent` res
 
 Rerank tiers:
 
-- `auto` — tries `gemma:7b`, `gemma:2b`, `qwen2.5:1.5b`, then `qwen2.5:3b`; uses the best available model.
-- `fast` — tries lightweight models: `gemma:2b`, `qwen2.5:1.5b`.
-- `quality` — tries larger models: `gemma:7b`, `qwen2.5:3b`.
+- `auto` — tries lightweight local models first (`qwen3.5:0.8b`, `gemma3:1b`), then legacy tags and larger quality models.
+- `fast` — tries lightweight models: `qwen3.5:0.8b`, `gemma3:1b`, `gemma:2b`, `qwen2.5:1.5b`.
+- `quality` — tries larger models: `gemma4:latest`, `qwen3.5:9b`, `gemma:7b`, `qwen2.5:3b`.
 
 ```bash
 # Install Ollama from https://ollama.com, then:
-ollama pull gemma:2b
+ollama pull qwen3.5:0.8b
 ollama list
-curl -X POST http://localhost:11434/api/generate -d '{"model":"gemma:2b","prompt":"test","stream":false}'
+curl -X POST http://localhost:11434/api/generate -d '{"model":"qwen3.5:0.8b","prompt":"test","stream":false}'
 curl http://127.0.0.1:8000/llm/status
 ```
 

@@ -28,9 +28,18 @@ class RerankConfig:
 
 
 TIER_MODELS = {
-    "fast": ["gemma:2b", "qwen2.5:1.5b"],
-    "quality": ["gemma:7b", "qwen2.5:3b"],
-    "auto": ["gemma:7b", "gemma:2b", "qwen2.5:1.5b", "qwen2.5:3b"],
+    "fast": ["qwen3.5:0.8b", "gemma3:1b", "gemma:2b", "qwen2.5:1.5b"],
+    "quality": ["gemma4:latest", "qwen3.5:9b", "gemma:7b", "qwen2.5:3b"],
+    "auto": [
+        "qwen3.5:0.8b",
+        "gemma3:1b",
+        "gemma:2b",
+        "qwen2.5:1.5b",
+        "gemma4:latest",
+        "qwen3.5:9b",
+        "gemma:7b",
+        "qwen2.5:3b",
+    ],
 }
 
 

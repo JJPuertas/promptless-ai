@@ -6,12 +6,14 @@ from backend.llm import fallback_models_for, get_llm_status, rerank_actions_with
 
 def test_rerank_actions_with_metadata_uses_valid_ollama_json(monkeypatch):
     monkeypatch.setattr("backend.llm.get_available_model", lambda tier=None: "gemma:2b")
+    calls = []
 
     class FakeClient:
         def __init__(self, timeout):
             self.timeout = timeout
 
-        def generate(self, **_kwargs):
+        def generate(self, **kwargs):
+            calls.append(kwargs)
             return {"response": '{"ranked": ["b", "a"]}'}
 
     fake_ollama = types.SimpleNamespace(Client=FakeClient)
@@ -26,6 +28,7 @@ def test_rerank_actions_with_metadata_uses_valid_ollama_json(monkeypatch):
     assert result.used is True
     assert result.model == "gemma:2b"
     assert [action["id"] for action in result.actions] == ["b", "a"]
+    assert calls[0]["think"] is False
 
 
 def test_rerank_actions_with_metadata_falls_back_on_error(monkeypatch):
@@ -52,7 +55,14 @@ def test_rerank_actions_with_metadata_falls_back_on_error(monkeypatch):
 def test_auto_fallback_models_start_at_selected_model(monkeypatch):
     monkeypatch.setattr(config.RerankConfig, "TIER", "auto")
 
-    assert fallback_models_for("gemma:2b") == ["gemma:2b", "qwen2.5:1.5b", "qwen2.5:3b"]
+    assert fallback_models_for("gemma:2b") == [
+        "gemma:2b",
+        "qwen2.5:1.5b",
+        "gemma4:latest",
+        "qwen3.5:9b",
+        "gemma:7b",
+        "qwen2.5:3b",
+    ]
 
 
 def test_get_llm_status_reports_config(monkeypatch):
